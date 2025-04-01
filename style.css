@@ -16,6 +16,9 @@ html {
   margin: 0;
   box-sizing: border-box;
 }
+body {
+  background: var(--backgroundCol);
+}
 header {
   height: 20vh;
   background: url(./images/bg-header-desktop.svg), var(--backgroundCol);
@@ -33,13 +36,18 @@ main {
   align-items: center;
   justify-content: center;
   gap: 2rem;
+  background-color: white;
 }
 .style-search-bar {
   width: 92%;
   margin: 0 auto;
   margin-bottom: 1rem;
   display: flex;
+  flex-wrap: wrap;
   gap: var(--small-gap);
+  position: relative;
+  background-color: white;
+  padding: 1rem;
 }
 
 .job-container {
@@ -74,11 +82,12 @@ main {
 .filter-btns {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--small-gap);
 }
-.filter-btns {
+/* .filter-btns {
   flex-basis: 50%;
-}
+} */
 .company {
   color: var(--primary);
   font-size: 17px;
@@ -86,6 +95,7 @@ main {
 .role {
   color: var(--veryDark);
   transition: var(--transition);
+  margin: 0.5rem 0;
 }
 .role:hover {
   cursor: pointer;
@@ -113,7 +123,8 @@ main {
 }
 
 .filter-btn,
-.searched-btn {
+.searched-btn,
+.clear {
   color: var(--primary);
   padding: 3px 7px;
   border-radius: 5px;
@@ -125,6 +136,17 @@ main {
 .filter-btn:hover {
   background-color: var(--primary);
   color: white;
+}
+.clear {
+  color: black;
+  font-weight: 500;
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translate(0, -50%);
+}
+.clear:hover {
+  color: var(--primary);
 }
 .searched-btn {
   position: relative;
@@ -144,27 +166,52 @@ main {
 .searched-btn img:hover {
   background-color: var(--veryDark);
 }
+.type,
+.postedAt,
+.location {
+  color: var(--dark);
+}
 
 @media screen and (max-width: 850px) {
+  --root {
+    --small-gap: 0.5rem;
+  }
   header {
     background: url(./images/bg-header-mobile.svg), var(--backgroundCol);
   }
   .style-search-bar {
     width: 100%;
+    padding: 1rem;
+  }
+  .container {
+    padding: 1rem;
   }
   .job-container {
-    width: 100%;
+    width: 80%;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.8rem;
   }
   .filter-btns {
     margin-left: 5rem;
-    flex-wrap: wrap;
   }
 }
 
 @media screen and (max-width: 500px) {
+  .job-container {
+    width: 100%;
+  }
+  .img-writeup {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--small-gap);
+  }
   .filter-btns {
+    border-top: 1px solid var(--dark);
+    padding-top: 1rem;
+    margin-left: 0;
+  }
+  .others {
+    margin-bottom: 0.5rem;
   }
 }

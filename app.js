@@ -1,5 +1,5 @@
 let mainJobsContainer = document.querySelector(".container");
-const searchArray = [];
+let searchArray = [];
 let jobs;
 
 async function initializeApp() {
@@ -70,18 +70,22 @@ function renderSearch(array) {
         `;
   });
 
-  searchContainer.innerHTML = search;
+  searchContainer.innerHTML =
+    search +
+    ` <button class="clear js-clear-all" onclick="clearAllSearch()">
+          clear
+        </button>`;
 
   if (searchContainer.innerHTML) {
     const deleteBtns = document.querySelectorAll(".js-delete-btn");
     //  logic for deleting the search
-
     document.body.addEventListener("click", (e) => {
       if (e.target.classList.contains("js-delete-btn")) {
         const deleteIndex = e.target.dataset.deleteId;
         if (deleteIndex >= 0 && deleteIndex < array.length) {
           const deletedItem = array[deleteIndex];
           array.splice(deleteIndex, 1);
+
           renderSearch(array);
 
           let filteredJobs = jobs.filter((job) => {
@@ -100,23 +104,38 @@ function renderSearch(array) {
         console.log("deleted at id : ", e.target.dataset.deleteId);
       }
     });
-    /*  deleteBtns.forEach((deleteIcon) => {
-      deleteIcon.addEventListener("click", () => {
-        const deleteIndex = deleteIcon.dataset.deleteId;
-        if (deleteIndex >= 0 && deleteIndex < array.length) {
-          array.splice(deleteIndex, 1);
-          renderSearch(array);
-        }
-
-        console.log("deleted array", array);
-        console.log("deleted at id : ", deleteIcon.dataset.deleteId);
-      });
-    }); */
   }
 }
 
 function filterJobs(jobs) {
-  document.querySelectorAll(".js-filters").forEach((filterBtn) => {
+  document.body.addEventListener("click", (e) => {
+    if (e.target.classList.contains("js-filters")) {
+      const filterBtn = e.target;
+      if (!searchArray.includes(filterBtn.innerText)) {
+        searchArray.push(filterBtn.innerText);
+        console.log(searchArray);
+
+        // filtering the data
+
+        let filteredJobs = jobs.filter((job) => {
+          return searchArray.every((searchQuery) => {
+            return (
+              job.role === searchQuery ||
+              job.level === searchQuery ||
+              job.languages.includes(searchQuery) ||
+              job.tools.includes(searchQuery)
+            );
+          });
+        });
+
+        console.log("Filtered Jobs:", filteredJobs); // ✅ Filtered jobs
+        renderSearch(searchArray);
+        updateJobs(filteredJobs); // ✅ Re-render the job listings
+      }
+    }
+  });
+
+  /*  document.querySelectorAll(".js-filters").forEach((filterBtn) => {
     filterBtn.addEventListener("click", () => {
       if (!searchArray.includes(filterBtn.innerText)) {
         searchArray.push(filterBtn.innerText);
@@ -140,7 +159,7 @@ function filterJobs(jobs) {
         updateJobs(filteredJobs); // ✅ Re-render the job listings
       }
     });
-  });
+  }); */
 }
 
 function updateJobs(filteredJobs) {
@@ -157,7 +176,7 @@ function updateJobs(filteredJobs) {
     html += `
          <li class="job-container">
           ${job.featured ? ' <div class="featured-absolute-div"></div>' : ""}
-         
+
           <div class="img-writeup">
             <img src="${job.logo}" class="logo" alt="${job.company}'s logo" />
             <div class="job-description">
@@ -190,3 +209,12 @@ function updateJobs(filteredJobs) {
   filterJobs(filteredJobs); // ✅ Re-attach the event listeners
 }
 initializeApp();
+// logic for clearing all searched query
+
+function clearAllSearch() {
+  searchArray = [];
+  renderSearch(searchArray);
+  renderAllJobs(jobs);
+  document.querySelector(".search-bar").innerHTML = "";
+  console.log("deleted all ", searchArray);
+}
